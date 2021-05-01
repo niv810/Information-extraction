@@ -1,0 +1,97 @@
+In this file I will specify the sparql query used to find info from ontology.
+Please use this file as reference for how each URI entity should look.
+
+Who directed <film>?
+SELECT *
+WHERE
+{
+    <http://example.org/film> <http://example.org/directed_by> ?director.
+}
+
+Who produced <film>?
+SELECT *
+WHERE
+{
+    <http://example.org/film> <http://example.org/produced_by> ?producer.
+}
+
+Is <film> based on a book?
+SELECT *
+WHERE
+{
+    <http://example.org/film> <http://example.org/based_on> ?book.
+}
+(And then if the returned result is not empty return yes)
+
+When was <film> released?
+SELECT *
+WHERE
+{
+    <http://example.org/film> <http://example.org/released_on> ?releaseDate.
+}
+(In some cases there is more than 1 release date, should both be presented, should the location also be
+ presented? For example, https://en.wikipedia.org/wiki/Promising_Young_Woman)
+
+How long is <film>?
+SELECT *
+WHERE
+{
+    <http://example.org/film> <http://example.org/running_time> ?duration.
+}
+
+Who starred in <film>?
+SELECT *
+WHERE
+{
+    <http://example.org/film> <http://example.org/starring> ?actor.
+}
+
+Did <person> star in <film>?
+ASK
+WHERE
+{
+    <http://example.org/film> <http://example.org/starring> <http://example.org/person>.
+}
+if result:
+    return 'yes'
+else:
+    return 'no'
+
+When was <person> born?
+SELECT *
+WHERE
+{
+    <http://example.org/person> <http://example.org/born> ?date.
+}
+
+What is the occupation of <person>?
+SELECT *
+WHERE
+{
+    <http://example.org/person> <http://example.org/occupation> ?occupation.
+}
+
+How many films are based on books?
+SELECT ?film
+WHERE
+{
+    ?film <http://example.org/based_on> ?book.
+}
+return len(result)
+
+How many films starring <person> won an academy award?
+SELECT ?film
+WHERE
+{
+    ?film <http://example.org/starring> ?person.
+}
+return len(result)
+
+How many <occupation1> are also < occupation2>?
+SELECT ?person
+WHERE
+{
+    ?person <http://example.org/occupation> ?occ1.
+    ?person <http://example.org/occupation> ?occ2.
+}
+return len(result)
