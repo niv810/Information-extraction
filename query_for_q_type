@@ -83,7 +83,7 @@ How many films starring <person> won an academy award?
 SELECT ?film
 WHERE
 {
-    ?film <http://example.org/starring> ?person.
+    ?film <http://example.org/starring> <http://example.org/person>.
 }
 return len(result)
 
