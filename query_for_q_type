@@ -88,10 +88,10 @@ WHERE
 return len(result)
 
 How many <occupation1> are also < occupation2>?
-SELECT ?person
+SELECT *
 WHERE
 {
-    ?person <http://example.org/occupation> ?occ1.
-    ?person <http://example.org/occupation> ?occ2.
+    ?person <http://example.org/occupation> <http://example.org/occupation1>.
+    ?person <http://example.org/occupation> <http://example.org/occupation1>.
 }
 return len(result)
