@@ -1,5 +1,3 @@
-import rdflib
-from SPARQLWrapper import SPARQLWrapper, JSON
 URI_PATH = "http://example.org/"
 
 
