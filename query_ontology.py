@@ -1,5 +1,6 @@
 from identify_q import get_question_type, URI_PATH
 import rdflib
+
 def parse_answer(question):
     answer_string = ""
     q_type, sparql_query = get_question_type(question)
@@ -7,10 +8,13 @@ def parse_answer(question):
     graph.parse("ontology.nt", format="nt")
     x = graph.query(sparql_query)
     if q_type == 3 or q_type == 7:  # yes/no questions
-        print()  # do something
+        if x:
+            answer_string = 'yes'
+        else:
+            answer_string = 'no'
 
     elif q_type >= 10:  # counting question
-        print(len(x))
+        answer_string = (len(x))
 
     else:  # list question
         for result in x:

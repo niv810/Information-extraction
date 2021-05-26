@@ -9,7 +9,7 @@ def get_question_type(question):
     if first_word == 'Who':
         second_word = question.split(' ')[1]
         if second_word == 'directed' or second_word == 'produced':
-            return query_for_1_2(question)
+            return 1, query_for_1_2(question)
         elif second_word == 'starred':
             return query_for_6(question)
         else:
@@ -17,31 +17,31 @@ def get_question_type(question):
             exit(1)
 
     elif first_word == 'Is':
-        return query_for_3(question)
+        return 3, query_for_3(question)
 
     elif first_word == 'When':
         relation = question.split(' ')[-1]
         if relation == 'released':
-            return query_for_4(question)
+            return 4, query_for_4(question)
         else:
-            return query_for_8(question)
+            return 8, query_for_8(question)
 
     elif first_word == 'How':
-        return query_for_5(question)
+        return 6, query_for_5(question)
 
     elif first_word == 'Did':
-        return query_for_7(question)
+        return 7, query_for_7(question)
 
     elif first_word == 'What':
-        return query_for_9(question)
+        return 9, query_for_9(question)
 
     elif first_word == 'How':
         if 'based on' in question:
-            return query_for_10(question)
+            return 10, query_for_10(question)
         elif 'academy award' in question:
-            return query_for_11(question)
+            return 11, query_for_11(question)
         else:
-            return query_for_12(question)
+            return 12, query_for_12(question)
     else:
         print("not a valid question")
         exit(1)
