@@ -5,6 +5,7 @@ from query_ontology import parse_answer
 
 url = "https://en.wikipedia.org/wiki/List_of_Academy_Award-winning_films"
 g = rdflib.Graph()
+bad = {"\n", ' ', ' (p.g.a)', 'p.g.a', ')', 'Executive Producer', ': ', ',', '(', ''}
 prefix = "https://en.wikipedia.org"
 URI_PATH = "http://example.org/"  # for ontology prefix
 counter = 0
@@ -42,12 +43,19 @@ def get_person(person):  # 0 - one person, 1 - more than one
             else:
                 born = ""
             person.append(born)
+            res, bad2 = [], []
             occupation = infobox.xpath("./tr[contains(.,'Occupation')]/td//text()")
-            bad = ["\n", ' ', ' (p.g.a)', 'p.g.a', ')', 'Executive Producer', ': ', ',', '(']
+            # bad = ["\n", ' ', ' (p.g.a)', 'p.g.a', ')', 'Executive Producer', ': ', ',', '(']
             if len(infobox.xpath("./tr[contains(.,'Occupation')]/td//style")) > 0:
-                bad += infobox.xpath("./tr[contains(.,'Occupation')]/td/style/text()")
-            occupation = [e.lower() for e in occupation if e not in bad]
-            person.append(occupation)
+                # bad2 = infobox.xpath("./tr[contains(.,'Occupation')]/td/style/text()")
+                occupation.pop(0)
+            for elem in occupation:
+                tmp = elem.split(", ")
+                for e in tmp:
+                    if e not in bad and "   " not in e:
+                        res.append(e.lower())
+            # occupation = [e.lower() for e in occupation if e not in bad if e not in bad2]
+            person.append(res)
         else:
             person += ["", []]
     else:
@@ -70,17 +78,17 @@ def find_people(occupation, infobox):  # occupation is Produced or Directed
         return []
     cell = "(//tr[contains(.,'" + occupation + "')]/td)[1]//"
     # cell = infobox.xpath("(//tr[contains(.,'"+occupation+"')]/td)[1]")[0]
-    people = []
+    people, bad2 = [], []
     # if len(cell.xpath("//a")) > 0:
     #     people = cell.xpath("//a/@href")
     #     bad = cell.xpath("//a/text()") + ["\n"]
     # tmp = cell.xpath("//text()")
-    bad = ["\n", ' ', ' (p.g.a)', 'p.g.a', ')', 'Executive Producer', ': ', ',', '(']
+    # bad = ["\n", ' ', ' (p.g.a)', 'p.g.a', ')', 'Executive Producer', ': ', ',', '(']
     if len(infobox.xpath(cell + "a")) > 0:
         people = infobox.xpath(cell + "a/@href")
-        bad += infobox.xpath(cell + "a/text()")
+        bad2 = infobox.xpath(cell + "a/text()")
     tmp = infobox.xpath(cell + "text()")
-    people += [e for e in tmp if e not in bad]  # we got all people name/link
+    people += [e for e in tmp if e not in bad if e not in bad2]  # we got all people name/link
     for i in range(len(people)):
         people[i] = get_person(people[i])
 
@@ -162,4 +170,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-    # parse_answer("Who directed Bao (film)?")
+    # parse_answer("Is Brave (2012 film) based on a book?")
