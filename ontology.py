@@ -166,7 +166,7 @@ def films(page):
 
 def main():
     create_ontology()
-    g.serialize("ontology2.nt", format="nt")
+    g.serialize("ontology.nt", format="nt")
 
 
 if __name__ == "__main__":
