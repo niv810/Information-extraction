@@ -4,12 +4,13 @@ URI_PATH = "http://example.org/"
 def get_question_type(question):
     question = question[:len(question) - 1]
     first_word = question.split(' ')[0]
+    second_word = question.split(' ')[1]
     if first_word == 'Who':
         second_word = question.split(' ')[1]
         if second_word == 'directed' or second_word == 'produced':
             return 1, query_for_1_2(question)
         elif second_word == 'starred':
-            return query_for_6(question)
+            return 6, query_for_6(question)
         else:
             print("not a valid question")
             exit(1)
@@ -24,8 +25,8 @@ def get_question_type(question):
         else:
             return 8, query_for_8(question)
 
-    elif first_word == 'How':
-        return 6, query_for_5(question)
+    elif first_word == 'How' and second_word == 'long':
+        return 5, query_for_5(question)
 
     elif first_word == 'Did':
         return 7, query_for_7(question)
@@ -54,8 +55,8 @@ def query_for_1_2(question):
 
 
 def query_for_3(question):
-    film_with_spaces = question.split(" based on a book?")[0]
-    film_with_spaces = film_with_spaces.split(" ", 1)[1]
+    film_with_spaces = question.split(" based on a book")[0]
+    film_with_spaces = film_with_spaces.split("Is ", 1)[1]
     film = film_with_spaces.replace(" ", "_")  # keep if URI is with underscore
     query = f"SELECT * WHERE {{ <{URI_PATH}{film}> <{URI_PATH}based_on> ?e. }}"
     return query
@@ -89,7 +90,7 @@ def query_for_7(question):
     entity_with_spaces = question.split(" star in ")[0]
     entity_with_spaces = entity_with_spaces.split(" ", 1)[1]
     entity = entity_with_spaces.replace(" ", "_")  # keep if URI is with underscore
-    query = f"ASK * WHERE {{ <{URI_PATH}{film}> <{URI_PATH}starring> <{URI_PATH}{entity}>. }}"
+    query = f"ASK WHERE {{ <{URI_PATH}{film}> <{URI_PATH}starring> <{URI_PATH}{entity}>. }}"
     return query
 
 
