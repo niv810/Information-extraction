@@ -137,9 +137,10 @@ def add_movie(movie):
     for date in dates:
         g.add((rdflib.URIRef(movie[2]), rdflib.URIRef(URI_PATH + "released_on"), rdflib.URIRef(URI_PATH + date)))
 
-    runtime = infobox.xpath("//tr[contains(.,'Running time')]/td/text()")
+    runtime = infobox.xpath("//tr[contains(.,'Running time')]/td//text()")
+    runtime = [e.replace(" ", "_") for e in runtime if e not in bad if "minutes" in e]
     for time in runtime:
-        g.add((rdflib.URIRef(movie[2]), rdflib.URIRef(URI_PATH + "running_time"), rdflib.URIRef(URI_PATH + time.replace(" ", "_"))))
+        g.add((rdflib.URIRef(movie[2]), rdflib.URIRef(URI_PATH + "running_time"), rdflib.URIRef(URI_PATH + time)))
 
 
 def films(page):
@@ -165,7 +166,7 @@ def films(page):
 
 def main():
     create_ontology()
-    g.serialize("ontology.nt", format="nt")
+    g.serialize("ontology2.nt", format="nt")
 
 
 if __name__ == "__main__":
