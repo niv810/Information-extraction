@@ -8,9 +8,9 @@ def parse_answer(question):
     x = graph.query(sparql_query)
     if q_type == 3 or q_type == 7:  # yes/no questions
         if x:
-            answer_string = 'yes'
+            answer_string = 'Yes'
         else:
-            answer_string = 'no'
+            answer_string = 'No'
 
     elif q_type >= 10:  # counting question
         answer_string = (len(x))
