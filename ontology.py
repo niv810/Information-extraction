@@ -37,11 +37,18 @@ def get_person(person):  # 0 - one person, 1 - more than one
         infobox = doc.xpath("//table[contains(@class, 'infobox')]/tbody")
         if len(infobox) != 0:
             infobox = infobox[0]
-            born = infobox.xpath("//span[contains(@class,'bday')]")
+            born = infobox.xpath("//tr[th[contains(.,'Born')]]//span[contains(@class,'bday')]")
             if len(born) > 0:
                 born = born[0].xpath("./text()")[0]
             else:
                 born = ""
+                tmp = infobox.xpath("//tr[th[contains(.,'Born')]]/td//text()")
+                if len(tmp) > 0:
+                    tmp = tmp[0][:4]
+                    if tmp.isnumeric() and "1900" <= tmp <= "2020":
+                        born = tmp
+            # else:
+                # born = ""
             person.append(born)
             res, bad2 = [], []
             occupation = infobox.xpath("./tr[contains(.,'Occupation')]/td//text()")
@@ -171,4 +178,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-    # parse_answer("Is Brave (2012 film) based on a book?")
+    # parse_answer("Who directed Ida_(film)?")
