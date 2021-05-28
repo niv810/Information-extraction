@@ -171,11 +171,11 @@ def films(page):
     print(counter)
 
 
-def main():
+def create():
     create_ontology()
     g.serialize("ontology.nt", format="nt")
 
 
 if __name__ == "__main__":
-    main()
+    create()
     # parse_answer("Who directed Ida_(film)?")
