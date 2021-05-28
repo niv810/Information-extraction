@@ -41,9 +41,8 @@ def get_question_type(question):
             return 11, query_for_11(question)
         else:
             return 12, query_for_12(question)
-    else:
-        print("not a valid question")
-        exit(1)
+    else:  # added question
+        return 13, query_for_13(question)
 
 
 def query_for_1_2(question):
@@ -130,4 +129,16 @@ def query_for_12(question):
     occ2 = occ2_with_spaces.replace(" ", "_")
     query = f"SELECT * WHERE {{ ?person <{URI_PATH}occupation> <{URI_PATH}{occ1}>." \
             f" ?person <{URI_PATH}occupation> <{URI_PATH}{occ2}>. }}"
+    return query
+
+
+def query_for_13(question):
+    temp = question.split("In which movies did ")[1]  # result: <entity1> and <entity2> star in together
+    star1_with_spaces = temp.split(" and ")[0]  # result: entity1 with spaces
+    star2_with_spaces = temp.split(" and ")[1]  # result: <entity2> star in together
+    star2_with_spaces = star2_with_spaces.split(" star in")[0]  # result: entity2 with spaces
+    star1 = star1_with_spaces.replace(" ", "_")  # result: entity1
+    star2 = star2_with_spaces.replace(" ", "_")  # result: entity2
+    query = f"SELECT * WHERE {{ ?movie <{URI_PATH}starring> <{URI_PATH}{star1}>." \
+            f" ?movie <{URI_PATH}starring> <{URI_PATH}{star2}>. }}"
     return query
