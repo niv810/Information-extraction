@@ -12,7 +12,7 @@ def parse_answer(question):
         else:
             answer_string = 'No'
 
-    elif q_type >= 10:  # counting question
+    elif q_type >= 10 and q_type != 13:  # counting question
         answer_string = (len(x))
 
     else:  # list question
