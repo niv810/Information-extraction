@@ -1,4 +1,4 @@
-URI_PATH = "http://example.org/"
+from ontology import URI_PATH
 
 
 def get_question_type(question):
