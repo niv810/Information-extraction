@@ -31,10 +31,9 @@ def parse_answer(question):
 
 
 def extract_answer_from_string(answer):
-    answer_parsed = str(answer).split(URI_PATH)[1]
-    answer_parsed = answer_parsed.replace("'", "")
-    answer_parsed = answer_parsed.replace(",", "")
+    answer_parsed = answer[0].split(URI_PATH)[1]
     answer_parsed = answer_parsed.replace("_", " ")
-    answer_parsed = answer_parsed.replace("))", "")
     return answer_parsed
+
+
 
