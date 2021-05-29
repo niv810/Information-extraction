@@ -1,7 +1,6 @@
 import rdflib
 import requests
 import lxml.html
-from query_ontology import parse_answer
 
 url = "https://en.wikipedia.org/wiki/List_of_Academy_Award-winning_films"
 g = rdflib.Graph()
@@ -19,7 +18,6 @@ def create_ontology():
 
 
 def get_person(person):  # 0 - one person, 1 - more than one
-
     if person[:6] == "/wiki/":
         link = prefix + person
         name = person[6:]
@@ -31,7 +29,6 @@ def get_person(person):  # 0 - one person, 1 - more than one
         uri = URI_PATH + name.replace(" ", "_")
     person = [name, link, uri]
     if person[1] != "":
-
         res = requests.get(person[1])
         doc = lxml.html.fromstring(res.content)
         infobox = doc.xpath("//table[contains(@class, 'infobox')]/tbody")
@@ -47,21 +44,16 @@ def get_person(person):  # 0 - one person, 1 - more than one
                     tmp = tmp[0][:4]
                     if tmp.isnumeric() and "1900" <= tmp <= "2020":
                         born = tmp
-            # else:
-                # born = ""
             person.append(born)
             res, bad2 = [], []
             occupation = infobox.xpath("./tr[contains(.,'Occupation')]/td//text()")
-            # bad = ["\n", ' ', ' (p.g.a)', 'p.g.a', ')', 'Executive Producer', ': ', ',', '(']
             if len(infobox.xpath("./tr[contains(.,'Occupation')]/td//style")) > 0:
-                # bad2 = infobox.xpath("./tr[contains(.,'Occupation')]/td/style/text()")
                 occupation.pop(0)
             for elem in occupation:
                 tmp = elem.split(", ")
                 for e in tmp:
-                    if e not in bad and "   " not in e:
-                        res.append(e.lower())
-            # occupation = [e.lower() for e in occupation if e not in bad if e not in bad2]
+                    if e not in bad:
+                        res.append((e.strip()).lower())
             person.append(res)
         else:
             person += ["", []]
@@ -84,22 +76,15 @@ def find_people(occupation, infobox):  # occupation is Produced or Directed
     if len(cell) == 0:
         return []
     cell = "(//tr[contains(.,'" + occupation + "')]/td)[1]//"
-    # cell = infobox.xpath("(//tr[contains(.,'"+occupation+"')]/td)[1]")[0]
     people, bad2 = [], []
-    # if len(cell.xpath("//a")) > 0:
-    #     people = cell.xpath("//a/@href")
-    #     bad = cell.xpath("//a/text()") + ["\n"]
-    # tmp = cell.xpath("//text()")
-    # bad = ["\n", ' ', ' (p.g.a)', 'p.g.a', ')', 'Executive Producer', ': ', ',', '(']
     if len(infobox.xpath(cell + "a")) > 0:
         people = infobox.xpath(cell + "a/@href")
         bad2 = infobox.xpath(cell + "a/text()")
     tmp = infobox.xpath(cell + "text()")
-    people += [e for e in tmp if e not in bad if e not in bad2]  # we got all people name/link
+    people = [e for e in people if e[0] != '#']
+    people += [e.strip() for e in tmp if e not in bad if e not in bad2]  # we got all people name/link
     for i in range(len(people)):
         people[i] = get_person(people[i])
-
-    # print(" ")
     return people
 
 
@@ -132,11 +117,8 @@ def add_movie(movie):
         g.add((rdflib.URIRef(movie[2]), rdflib.URIRef(URI_PATH + "starring"), rdflib.URIRef(person[2])))
     add_person_to_ontology(people)
 
-    global j
     if is_based(doc):
         g.add((rdflib.URIRef(movie[2]), rdflib.URIRef(URI_PATH + "based_on"), rdflib.URIRef(URI_PATH + "book")))
-        print(j)
-    j += 1
 
     dates = infobox.xpath("//span[contains(@class,'dtstart')]")
     if len(dates) > 0:
@@ -145,7 +127,7 @@ def add_movie(movie):
         g.add((rdflib.URIRef(movie[2]), rdflib.URIRef(URI_PATH + "released_on"), rdflib.URIRef(URI_PATH + date)))
 
     runtime = infobox.xpath("//tr[contains(.,'Running time')]/td//text()")
-    runtime = [e.replace(" ", "_") for e in runtime if e not in bad if "minutes" in e]
+    runtime = [(e.strip()).replace(" ", "_") for e in runtime if e not in bad if "minutes" in e]
     for time in runtime:
         g.add((rdflib.URIRef(movie[2]), rdflib.URIRef(URI_PATH + "running_time"), rdflib.URIRef(URI_PATH + time)))
 
@@ -158,24 +140,11 @@ def films(page):
         uri = URI_PATH + name
         name = name.replace("_", " ")
         link = prefix + movies[i].xpath("./@href")[0]
-        # name = movies[i].xpath("./text()")[0]
         movies[i] = [name, link, uri]
     for i in range(0, len(movies)):
         add_movie(movies[i])
-
-    # //table//th/text()[contains(.,'Film')]
-    # //table[.//th//text()[contains(.,'Film')]]
-    # //table[//th[contains(.,'Film')]]//tr//td[2]//a[1]//text()
-    # print(movies)
-    print(len(movies))
-    print(counter)
 
 
 def create():
     create_ontology()
     g.serialize("ontology.nt", format="nt")
-
-
-if __name__ == "__main__":
-    create()
-    # parse_answer("Who directed Ida_(film)?")
