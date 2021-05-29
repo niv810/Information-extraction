@@ -1,4 +1,5 @@
-from identify_q import get_question_type, URI_PATH
+from identify_q import get_question_type
+from ontology import URI_PATH
 import rdflib
 def parse_answer(question):
     graph = rdflib.Graph()
