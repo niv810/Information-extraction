@@ -5,7 +5,7 @@ from query_ontology import parse_answer
 def write_answer():
     graph = rdflib.Graph()
     graph.parse("ontology.nt", format="nt")
-    with open("question_long.txt", 'r', encoding='utf-8') as questions_file, open("answers_long.txt", 'w',
+    with open("question_release.txt", 'r', encoding='utf-8') as questions_file, open("answers_release.txt", 'w',
                                                                                   encoding='utf-8') as f:
         con = True
         while con:
