@@ -42,8 +42,11 @@ def get_person(person):
                 tmp = infobox.xpath("//tr[th[contains(.,'Born')]]/td//text()")
                 if len(tmp) > 0:
                     tmp = tmp[0][:4]
-                    if tmp.isnumeric() and "1900" <= tmp <= "2020":
-                        born = tmp
+                    for st in tmp:
+                        st = st.split(" ")
+                        for s in st:
+                            if s.isnumeric() and "1900" <= s <= "2020":
+                                born = s
             person.append(born)
             res, bad2 = [], []
             occupation = infobox.xpath("./tr[contains(.,'Occupation')]/td//text()")
