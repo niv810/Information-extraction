@@ -17,7 +17,7 @@ def create_ontology():
     films(doc)
 
 
-def get_person(person):  # 0 - one person, 1 - more than one
+def get_person(person):
     if person[:6] == "/wiki/":
         link = prefix + person
         name = person[6:]
@@ -71,7 +71,7 @@ def is_based(movie):
     return 0
 
 
-def find_people(occupation, infobox):  # occupation is Produced or Directed
+def find_people(occupation, infobox):
     cell = infobox.xpath("//tr[contains(.,'" + occupation + "')]/td")
     if len(cell) == 0:
         return []
