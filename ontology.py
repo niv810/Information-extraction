@@ -41,7 +41,6 @@ def get_person(person):
                 born = ""
                 tmp = infobox.xpath("//tr[th[contains(.,'Born')]]/td//text()")
                 if len(tmp) > 0:
-                    tmp = tmp[0][:4]
                     for st in tmp:
                         st = st.split(" ")
                         for s in st:
