@@ -1,2 +1,3 @@
 # Information-Extraction
-Building ontology of academy award winning films between 2010 to 2021 (including actors, producers and directors) and answering questions over the ontology in natural language.
+1. Creating ontology of academy award winning films (by their Wikipedia pages) between 2010 to 2021 (including actors, producers and directors) using XPATH. <br/>
+2. Answering questions over the ontology in natural language using SPARQL.
